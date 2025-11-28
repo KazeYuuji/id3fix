@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Kualitas Anggur</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; line-height: 1.6; display: flex; justify-content: center; align-items: center; margin: 0; padding: 20px; }
+        .container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 100%; max-width: 800px; }
+        h1, h2 { color: #4a4a4a; text-align: center; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input[type="number"] { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 0.75rem; background-color: #5c67f2; color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; transition: background-color 0.3s ease; }
+        button:hover { background-color: #4a54b3; }
+        .result { margin-top: 2rem; padding: 1rem; background-color: #e9f7ef; border-left: 5px solid #28a745; font-size: 1.2rem; text-align: center; }
+        .error { margin-top: 2rem; padding: 1rem; background-color: #f8d7da; border-left: 5px solid #dc3545; color: #721c24; }
+
+        .performance-section { margin-bottom: 2rem; padding: 1rem; background-color: #f8f9fa; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { border: 1px solid #dee2e6; padding: 0.75rem; text-align: left; }
+        th { background-color: #e9ecef; }
+        .con-model { background-color: #d4edda; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prediksi Kualitas Anggur</h1>
+        
+        <div class="performance-section">
+            <h2>Kinerja Model</h2>
+            <p>Berikut model dengan F1-Score ID3 DecisionTreeClassifier digunakan untuk prediksi.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Akurasi</th>
+                        <th>F1-Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr {% if performance.model_name == 'ID3 (Decision Tree)' %}class="con-model"{% endif %}>
+                        <td>ID3 (Decision Tree)</td>
+                        <td>{{ performance.id3.accuracy }}</td>
+                        <td>{{ performance.id3.f1_score }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if prediction %}
+            <div class="result">
+                <strong>Hasil Prediksi Kualitas:</strong> {{ prediction }}
+            </div>
+        {% endif %}
+
+        <form action="/" method="post">
+            {% for feature in features %}
+                <div class="form-group">
+                    <label for="{{ feature }}">{{ feature.replace('_', ' ').title() }}:</label>
+                    <input type="number" step="any" id="{{ feature }}" name="{{ feature }}" 
+                           value="{{ input_values[feature] if input_values is defined and input_values[feature] else '' }}" required>
+                </div>
+            {% endfor %}
+            <button type="submit">Prediksi</button>
+        </form>
+    </div>
+</body>
+</html>
